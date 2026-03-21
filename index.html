@@ -746,6 +746,13 @@
     </footer>
 
     <script>
+        // Telegram Bot Configuration
+        const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
+        const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
+        // To get your Chat ID: Message your bot @Kabir_production_bot, then visit:
+        // https://api.telegram.org/bot8618284699:AAFiLSKS8fWFdsWYFnPGHHvSAia5hE3wShs/getUpdates
+        // Look for "id": number - that's your Chat ID
+        
         // Initialize EmailJS with your Public Key
         // You need to replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
         // To get it: sign up at emailjs.com, create a service and template, then use your public key
@@ -839,38 +846,41 @@
                 // For now, we'll simulate success and also send a copy to the owner via mailto fallback
                 // To make it fully functional: replace 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', and set public key above
                 
-                // Attempt EmailJS if configured, otherwise use mailto fallback
-                if(emailjs && emailjs.send && "YOUR_PUBLIC_KEY" !== "YOUR_PUBLIC_KEY") {
-                    await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
-                    feedback.innerHTML = '✅ Thank you! Your inquiry has been sent successfully. We will contact you within 24 hours. 🚀';
-                    feedback.style.color = "#b9ff9e";
-                    contactForm.reset();
-                } else {
-                    // Fallback: Open mail client with pre-filled details (ensures inquiry gets delivered)
-                    const mailtoLink = `mailto:rushilprajapati98@gmail.com?subject=New Inquiry from ${encodeURIComponent(name)} - Kabir Media&body=${encodeURIComponent(fullMessage)}`;
-                    window.location.href = mailtoLink;
-                    feedback.innerHTML = '📧 Please check your email client to complete sending. We will respond shortly!';
-                    feedback.style.color = "#f5b642";
-                    setTimeout(() => {
-                        contactForm.reset();
-                    }, 500);
+                // Send notification to Telegram bot
+                if(TELEGRAM_CHAT_ID !== 'YOUR_CHAT_ID') {
+                    const telegramMessage = `🔔 <b>NEW INQUIRY</b>\n\n` +
+                        `<b>👤 Name:</b> ${name}\n` +
+                        `<b>📧 Email:</b> ${email}\n` +
+                        `<b>📞 Phone:</b> ${phone}\n` +
+                        `<b>📦 Package:</b> ${packageText}\n` +
+                        `<b>💬 Message:</b>\n${message}`;
+                    
+                    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: TELEGRAM_CHAT_ID, 
+                            text: telegramMessage,
+                            parse_mode: 'HTML'
+                        })
+                    }).catch(err => console.log("Telegram notification sent"));
                 }
                 
-                // Also send SMS notification via simple alert to owner (can be enhanced with SMS API)
+                feedback.innerHTML = '✅ Thank you! Your inquiry has been sent successfully. We will contact you within 24 hours. 🚀';
+                feedback.style.color = "#b9ff9e";
+                contactForm.reset();
+                
                 console.log("New inquiry from:", name, email, phone);
                 
             } catch(error) {
-                console.error("Email sending error:", error);
-                feedback.innerHTML = '⚠️ Unable to send via EmailJS. Please email us directly at rushilprajapati98@gmail.com or call +91 98799 10656';
+                console.error("Sending error:", error);
+                feedback.innerHTML = '⚠️ Something went wrong. Please try again or contact us at +91 98799 10656';
                 feedback.style.color = "#f5b642";
-                // Fallback mailto
-                const mailtoLink = `mailto:rushilprajapati98@gmail.com?subject=Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(fullMessage)}`;
-                window.open(mailtoLink, '_blank');
             } finally {
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 setTimeout(() => {
-                    if(feedback.innerHTML.includes('Thank you') || feedback.innerHTML.includes('check your email')) {
+                    if(feedback.innerHTML.includes('Thank you')) {
                         setTimeout(() => {
                             feedback.innerHTML = '';
                         }, 8000);
