@@ -7,8 +7,6 @@
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -203,6 +201,9 @@
             padding: 1.8rem;
             transition: 0.25s ease;
             border: 1px solid rgba(245, 182, 66, 0.15);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
         }
 
         .service-card:hover {
@@ -237,6 +238,9 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: rotateY(180deg) scale(0.8);
+            transition: all 0.8s ease-out;
         }
 
         .package-card:hover {
@@ -530,81 +534,229 @@
             to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .nav-flex {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                justify-content: flex-start;
-                align-items: center;
-                padding: 0 1.2rem;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-            .logo {
-                flex-shrink: 0;
-                order: 1;
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
             }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
 
-            .logo img {
-                height: 40px;
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
             }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
 
-            .logo h1 {
-                font-size: 1rem;
+        @keyframes flipIn {
+            from {
+                opacity: 0;
+                transform: rotateY(180deg) scale(0.8);
             }
+            to {
+                opacity: 1;
+                transform: rotateY(0deg) scale(1);
+            }
+        }
 
-            .logo p {
-                display: none;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-            .nav-links {
-                order: 3;
-                flex-basis: 100%;
-                width: 100%;
-                gap: 1rem;
-                margin-top: 0.8rem;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-                -webkit-overflow-scrolling: touch;
-                flex-wrap: nowrap;
-                display: flex;
-            }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
 
-            .nav-links li {
-                white-space: nowrap;
-            }
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-            .btn-gold {
-                flex-shrink: 0;
-                order: 2;
-                margin-left: auto;
-                padding: 0.6rem 1.2rem;
-                font-size: 0.85rem;
-                background: var(--gold);
-            }
+        .animate-fade-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
 
-            .hero h2 {
-                font-size: 2.3rem;
+        .animate-fade-left.animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animate-fade-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-fade-right.animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .animate-flip {
+            opacity: 0;
+            transform: rotateY(180deg) scale(0.8);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-flip.animate {
+            opacity: 1;
+            transform: rotateY(0deg) scale(1);
+        }
+
+        .animate-slide-up {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-slide-up.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Preloader / Intro Animation */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+
+        .intro-content {
+            text-align: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        .camera-intro {
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            animation: cameraShutter 1.2s ease-in-out infinite;
+        }
+
+        @keyframes cameraShutter {
+            0%, 100% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 0px var(--gold); }
+            50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 25px var(--gold); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            .container {
-                padding: 0 1.2rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            .metric-highlight {
-                flex-direction: column;
-            }
-            .contact-info-grid {
-                flex-direction: column;
-            }
-            .packages-grid {
-                grid-template-columns: 1fr;
-            }
+        }
+
+        .intro-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffffff, var(--gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-sub {
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+        }
+
+        .intro-loader {
+            width: 60px;
+            height: 2px;
+            background: rgba(245,182,66,0.3);
+            margin: 2rem auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-loader::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40%;
+            height: 100%;
+            background: var(--gold);
+            animation: loaderMove 1.2s ease infinite;
+        }
+
+        @keyframes loaderMove {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+
+        /* Main Content */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .main-content.visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <header>
+    <!-- Intro Screen with Camera Animation -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-content">
+            <div class="camera-intro">
+                <i class="fas fa-camera-retro"></i>
+            </div>
+            <div class="intro-title">KABIR MEDIA</div>
+            <div class="intro-sub">PRODUCTION</div>
+            <div class="intro-loader"></div>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
         <div class="container nav-flex">
             <div class="logo">
-                <img src="images/logo.jpeg" alt="Kabir Media Production Logo">
+                <img src="images/logo.png" alt="Kabir Media Production Logo">
                 <div class="logo-text">
                     <h1>KABIR MEDIA</h1>
                     <p>production • high-performance vision</p>
@@ -637,19 +789,19 @@
         <div id="services">
             <div class="section-title">⚡ What We Deliver — In-House Production</div>
             <div class="services-grid">
-                <div class="service-card"><div class="service-icon"><i class="fas fa-camera"></i></div><h3>High‑Performance Colourty</h3><p>Cinematic colour grading & look design for shoots, giving every frame premium visual depth.</p></div>
-                <div class="service-card"><div class="service-icon"><i class="fas fa-video"></i></div><h3>Modal for Shoot</h3><p>Professional model coordination & talent direction for brand campaigns, music videos, and short films.</p></div>
-                <div class="service-card"><div class="service-icon"><i class="fas fa-chart-simple"></i></div><h3>Business Account Reach</h3><p>Data-driven growth strategy, boosting Instagram/business reach with targeted content & engagement.</p></div>
-                <div class="service-card"><div class="service-icon"><i class="fas fa-cut"></i></div><h3>Video Editing</h3><p>Fast-paced storytelling, transitions, motion graphics — edits that hook viewers within seconds.</p></div>
-                <div class="service-card"><div class="service-icon"><i class="fas fa-pen-fancy"></i></div><h3>Script for Any Video</h3><p>Compelling narratives, ad copies, dialogues & hooks tailored to client's brand voice.</p></div>
-                <div class="service-card"><div class="service-icon"><i class="fas fa-ad"></i></div><h3>SMM + Ads & Reviews</h3><p>Social media marketing, ad campaign management, and review generation to build trust & sales.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-camera"></i></div><h3>High‑Performance Colourty</h3><p>Cinematic colour grading & look design for shoots, giving every frame premium visual depth.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-video"></i></div><h3>Modal for Shoot</h3><p>Professional model coordination & talent direction for brand campaigns, music videos, and short films.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-chart-simple"></i></div><h3>Business Account Reach</h3><p>Data-driven growth strategy, boosting Instagram/business reach with targeted content & engagement.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-cut"></i></div><h3>Video Editing</h3><p>Fast-paced storytelling, transitions, motion graphics — edits that hook viewers within seconds.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-pen-fancy"></i></div><h3>Script for Any Video</h3><p>Compelling narratives, ad copies, dialogues & hooks tailored to client's brand voice.</p></div>
+                <div class="service-card animate-on-scroll"><div class="service-icon"><i class="fas fa-ad"></i></div><h3>SMM + Ads & Reviews</h3><p>Social media marketing, ad campaign management, and review generation to build trust & sales.</p></div>
             </div>
         </div>
 
         <div id="packages">
             <div class="section-title">🎯 Branding Packages — Scale Your Success</div>
             <div class="packages-grid">
-                <div class="package-card">
+                <div class="package-card animate-flip">
                     <div class="package-name">Starter</div>
                     <div class="package-price">₹15,000<span> / month</span></div>
                     <ul class="package-features">
@@ -663,7 +815,7 @@
                     <a href="#contact" class="btn-outline package-select" data-package="Starter - ₹15,000/month">Choose Plan</a>
                 </div>
 
-                <div class="package-card popular">
+                <div class="package-card popular animate-flip">
                     <div class="popular-badge">🔥 MOST POPULAR</div>
                     <div class="package-name">Premium Pro</div>
                     <div class="package-price">₹20,000<span> / month</span></div>
@@ -683,7 +835,7 @@
                     <a href="#contact" class="btn-gold package-select" data-package="Premium Pro - ₹20,000/month 🔥">Get 20k Package →</a>
                 </div>
 
-                <div class="package-card">
+                <div class="package-card animate-flip">
                     <div class="package-name">Elite</div>
                     <div class="package-price">₹35,000<span> / month</span></div>
                     <ul class="package-features">
@@ -705,7 +857,7 @@
         <div id="work">
             <div class="section-title">🎬 Recent Projects — Real Results</div>
             <div class="work-grid">
-                <div class="work-item">
+                <div class="work-item animate-slide-up">
                     <div class="work-img"><i class="fas fa-film fa-3x"></i></div>
                     <div class="work-info">
                         <h3>The Diwali Pura Youth</h3>
@@ -718,7 +870,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="work-item">
+                <div class="work-item animate-slide-up">
                     <div class="work-img"><i class="fas fa-hand-sparkles fa-3x"></i></div>
                     <div class="work-info">
                         <h3>SwastikFoundation1</h3>
@@ -732,7 +884,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="work-item">
+                <div class="work-item animate-slide-up">
                     <div class="work-img"><i class="fas fa-images fa-3x"></i></div>
                     <div class="work-info">
                         <h3>Artificial Flower Factory</h3>
@@ -749,7 +901,7 @@
         </div>
 
         <div id="results">
-            <div class="vision-section">
+            <div class="vision-section animate-fade-left">
                 <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">🌟 Our Vision: Early Success for Every Brand</h2>
                 <p style="margin-bottom: 1rem; color: #ccc;">When we post a video for a client, we aim for <strong>2k+ views per hour</strong> — even starting from 5k followers base. We combine high-performance colour grading, trending edits, and scroll-stopping scripts to deliver exponential reach.</p>
                 <div class="metric-highlight">
@@ -765,17 +917,17 @@
         </div>
 
         <div class="services-grid" style="margin-top: 0;">
-            <div class="service-card" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
+            <div class="service-card animate-on-scroll" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
                 <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
                 <h3>Ads & Reviews Management</h3>
                 <p>Meta/Instagram ad campaigns, retargeting, and authentic review generation to build social proof and drive conversions for businesses.</p>
             </div>
-            <div class="service-card" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
+            <div class="service-card animate-on-scroll" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
                 <div class="service-icon"><i class="fas fa-tachometer-alt"></i></div>
                 <h3>High-Performance Video Colourty</h3>
                 <p>Professional color grading suite for fashion, product shoots, short films — we ensure visual superiority.</p>
             </div>
-            <div class="service-card" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
+            <div class="service-card animate-on-scroll" style="background: linear-gradient(145deg, #14141e, #0c0c12);">
                 <div class="service-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Complete Production Pipeline</h3>
                 <p>From script to shoot, model hiring, video editing, and social media distribution — all under one roof.</p>
@@ -848,21 +1000,25 @@
         <p>© 2025 Kabir Media Production — High-Performance Video Colourty & Social Media Agency. All production in-house.</p>
         <p style="margin-top: 0.5rem;"><i class="fas fa-envelope"></i> rushilprajapati98@gmail.com  |  <i class="fas fa-phone"></i> +91 98799 10657  |  Vision: Early success for every partner</p>
     </footer>
+    </div>
 
     <script>
+        // Intro Animation
+        const introScreen = document.getElementById('introScreen');
+        const mainContent = document.getElementById('mainContent');
+
+        setTimeout(() => {
+            introScreen.style.opacity = '0';
+            introScreen.style.visibility = 'hidden';
+            mainContent.classList.add('visible');
+        }, 2200);
+
         // Telegram Bot Configuration
         const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
         const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
         // To get your Chat ID: Message your bot @Kabir_production_bot, then visit:
         // https://api.telegram.org/bot8618284699:AAFiLSKS8fWFdsWYFnPGHHvSAia5hE3wShs/getUpdates
         // Look for "id": number - that's your Chat ID
-        
-        // Initialize EmailJS with your Public Key
-        // You need to replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
-        // To get it: sign up at emailjs.com, create a service and template, then use your public key
-        (function() {
-            emailjs.init("YOUR_PUBLIC_KEY"); // REPLACE WITH YOUR ACTUAL EMAILJS PUBLIC KEY
-        })();
 
         // Package selector functionality
         document.querySelectorAll('.package-select').forEach(btn => {
@@ -933,23 +1089,6 @@
                 `🔗 Contact via: +91 98799 10657`;
             
             try {
-                // Send email using EmailJS
-                // You need to replace these with your actual EmailJS credentials
-                // Sign up at emailjs.com, create a service (Gmail, Outlook, etc.) and template
-                const templateParams = {
-                    to_email: "rushilprajapati98@gmail.com",
-                    from_name: name,
-                    from_email: email,
-                    phone: phone,
-                    package: packageText,
-                    message: message,
-                    full_details: fullMessage
-                };
-                
-                // REPLACE WITH YOUR ACTUAL SERVICE ID, TEMPLATE ID, AND PUBLIC KEY
-                // For now, we'll simulate success and also send a copy to the owner via mailto fallback
-                // To make it fully functional: replace 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', and set public key above
-                
                 // Send notification to Telegram bot
                 if(TELEGRAM_CHAT_ID !== 'YOUR_CHAT_ID') {
                     const telegramMessage = `🔔 <b>NEW INQUIRY</b>\n\n` +
@@ -993,8 +1132,26 @@
             }
         });
         
-        // Add note about EmailJS setup
-        console.log("Note: For automatic email delivery, sign up at emailjs.com and replace 'YOUR_PUBLIC_KEY', 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID' in the script.");
+        // Scroll Animation Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 200); // Stagger animations
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-on-scroll, .animate-fade-left, .animate-fade-right, .animate-flip, .animate-slide-up').forEach(el => {
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>
